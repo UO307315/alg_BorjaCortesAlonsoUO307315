@@ -3,7 +3,7 @@ package p11;
 
 /** Esta clase utiliza los metodos estaticos de la clase Vector1.
  * Sirve para medir tiempos de la operacion suma, para ello:
- * Va incrementando autom�ticamente el n del problema y adem�s
+ * Va incrementando automaticamente el n del problema y ademas
  * segun una escala de tiempos determinada por repeticiones, 
  * que se proporciona como argumento en linea de comandos para la ejecucion
  */
@@ -19,7 +19,7 @@ public static void main (String arg [] )
 
 	System.out.println("repeticiones = "+ repeticiones);
 	System.out.println ("n\tTiempo");   
-	for ( int n= 10000; n<= 81920000; n*=4) // n se va duplicando   
+	for ( int n= 10000; n<= 81920000; n*=2) // n se va duplicando   
 	{
 		v = new int [n] ;
 		Vector1.rellena (v);
