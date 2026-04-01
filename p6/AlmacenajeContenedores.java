@@ -1,7 +1,9 @@
 
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,39 +12,54 @@ public class AlmacenajeContenedores{
     private Integer[] conjuntoS;
     private int mejorK;//Numero minimo de contenedores
 
-
+    private int llamadasRecursivas;
     private List<List<Integer>> mejorDistribucion;
 
-    public static void main(String[] args) throws FileNotFoundException {
-        Scanner sc = new Scanner(new FileReader(args[0]));
-        int c = sc.nextInt();
-        String [] parts = sc.nextLine().split(" " );
-
-        Integer[] toS = new Integer[parts.length];
-
-        for (int i = 0; i < parts.length; i++) {
-            toS[i] = Integer.valueOf(parts[i]);
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            System.out.println("Error: Debes pasar el nombre del archivo como argumento.");
+            return;
         }
-       new AlmacenajeContenedores(c,toS).resolver();
+
+        try (Scanner sc = new Scanner(new File(args[0]))) {
+            if (!sc.hasNextInt()) return;
+            int c = sc.nextInt(); // Capacidad C [cite: 29]
+            
+            List<Integer> listaObjetos = new ArrayList<>();
+            while (sc.hasNextInt()) {
+                listaObjetos.add(sc.nextInt()); // Tamaños de objetos [cite: 30]
+            }
+            
+            Integer[] toS = listaObjetos.toArray(new Integer[0]);
+            new AlmacenajeContenedores(c, toS).resolver();
+        } catch (FileNotFoundException e) {
+            System.out.println("Fichero no encontrado: " + args[0]);
+        }
     }
 
     public void resolver() {
         //Backtraking
-        backtraking(0, new ArrayList);
-
-
+        backtraking(0, new ArrayList<>());
         //mostrarSolucion
+        mostrarSolucion();
+    }
+    public void resolverSinImprimir() {
+        //Backtraking
+        backtraking(0, new ArrayList<>());
     }
 
 
     public AlmacenajeContenedores(int c, Integer[] s) {
         this.capacidadC = c;
+        Arrays.sort(s, Collections.reverseOrder());
         this.conjuntoS = s;
 
-        this.mejorK = conjuntoS.length;
+        this.mejorK = conjuntoS.length +1;
+        this.mejorDistribucion = null;
     }
 
     private void backtraking(int indexObject,List<List<Integer>> contenedores){
+        llamadasRecursivas++;
         //Caso base
         if (indexObject == conjuntoS.length) {
             if (contenedores.size() < mejorK) {
@@ -55,7 +72,8 @@ public class AlmacenajeContenedores{
         //Podamos: si el size de contenedores > mejor PARAMOS
         if (contenedores.size() >= mejorK){
             return;
-        } 
+        }
+        
 
         //probar a meter en contenedores existentes
         for(int i=0;i< contenedores.size();i++){
@@ -96,5 +114,20 @@ public class AlmacenajeContenedores{
             contador += lista.get(i);
         }
         return contador;
+    }
+
+    private void mostrarSolucion() {
+        if (mejorDistribucion != null) {
+            System.out.println("Lista de contenedores y objetos contenidos:");
+            for (int i = 0; i < mejorDistribucion.size(); i++) {
+                System.out.print("Contenedor " + (i + 1) + ": ");
+                for (Integer objeto : mejorDistribucion.get(i)) {
+                    System.out.print(objeto + " ");
+                }
+                System.out.println();
+            }
+            System.out.println("El número de contenedores necesario es " + mejorK + ".");
+            System.out.println("El número de llamadas recursivas es " + llamadasRecursivas + ".");
+        }
     }
 }
