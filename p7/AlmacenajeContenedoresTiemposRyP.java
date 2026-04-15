@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class AlmacenajeContenedoresTiemposRyP {
+public class AlmacenajeContenedoresTiemposRyP{
 
     public static void main(String[] args) throws Exception {
         long t1, t2;

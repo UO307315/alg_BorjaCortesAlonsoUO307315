@@ -12,6 +12,7 @@ public class AlmacenajeContenedoresRyP{
     private Integer[] conjuntoS;
     private int mejorK;//Numero minimo de contenedores
 
+
     private int llamadasRecursivas;
     private List<List<Integer>> mejorDistribucion;
 
@@ -23,11 +24,11 @@ public class AlmacenajeContenedoresRyP{
 
         try (Scanner sc = new Scanner(new File(args[0]))) {
             if (!sc.hasNextInt()) return;
-            int c = sc.nextInt(); // Capacidad C [cite: 29]
+            int c = sc.nextInt(); // Capacidad C
             
             List<Integer> listaObjetos = new ArrayList<>();
             while (sc.hasNextInt()) {
-                listaObjetos.add(sc.nextInt()); // Tamaños de objetos [cite: 30]
+                listaObjetos.add(sc.nextInt()); // Tamaños de objetos
             }
             
             Integer[] toS = listaObjetos.toArray(new Integer[0]);
@@ -59,6 +60,11 @@ public class AlmacenajeContenedoresRyP{
     }
 
     private void backtraking(int indexObject,List<List<Integer>> contenedores){
+        //LowerBound
+        //Calcular el número de contenedores mínimo teóricode contenedores adicionales necesarios
+        int contenedoresNecesarios = (sumatorioRestante(indexObject) + capacidadC - 1) / capacidadC;
+        int lowerBound = contenedores.size() + contenedoresNecesarios;
+        
         llamadasRecursivas++;
         //Caso base
         if (indexObject == conjuntoS.length) {
@@ -68,18 +74,11 @@ public class AlmacenajeContenedoresRyP{
             }
             return;
         }
-
-        //Podamos:
-        int pesoRestante = 0;
-        for (int i = indexObject; i < conjuntoS.length; i++) {
-            pesoRestante += conjuntoS[i];
-        }
-        int cota = contenedores.size()
-                + (int) Math.ceil((double) pesoRestante / capacidadC);
-
-        if (cota >= mejorK) {
+        //Heurístico nuevo
+        if(lowerBound >= mejorK){
             return;
         }
+
         
 
         //probar a meter en contenedores existentes
@@ -113,6 +112,14 @@ public class AlmacenajeContenedoresRyP{
             copia.add(new ArrayList<>(c));
         }
         return copia;
+    }
+
+    private int sumatorioRestante(int indexObject){
+        int sum = 0;
+        for(int i = indexObject; i < conjuntoS.length; i++){
+            sum += conjuntoS[i];
+        }
+        return sum;
     }
 
     private Integer sum(List<Integer> lista) {
