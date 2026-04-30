@@ -23,11 +23,11 @@ public class AlmacenajeContenedores{
 
         try (Scanner sc = new Scanner(new File(args[0]))) {
             if (!sc.hasNextInt()) return;
-            int c = sc.nextInt(); // Capacidad C [cite: 29]
+            int c = sc.nextInt(); 
             
             List<Integer> listaObjetos = new ArrayList<>();
             while (sc.hasNextInt()) {
-                listaObjetos.add(sc.nextInt()); // Tamaños de objetos [cite: 30]
+                listaObjetos.add(sc.nextInt()); 
             }
             
             Integer[] toS = listaObjetos.toArray(new Integer[0]);
